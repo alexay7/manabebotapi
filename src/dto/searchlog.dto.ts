@@ -1,6 +1,7 @@
 import {
   IsEnum,
   IsISO8601,
+  IsNumber,
   IsNumberString,
   IsOptional,
   IsString,
@@ -56,4 +57,15 @@ export class SearchLogQuery {
   @IsEnum(Sort)
   @IsOptional()
   sort?: keyof typeof Sort;
+}
+
+export class AnkiFinishedDto {
+  @IsString()
+  userId: string;
+
+  @IsNumber()
+  reviews: number;
+
+  @IsNumber()
+  newCards: number;
 }
