@@ -90,7 +90,7 @@ export class AppController {
     if (body.allCards && body.studiedCards) {
       message.embeds[0].fields.push({
         name: 'Progreso del mazo',
-        value: `${body.studiedCards}/${body.allCards}`,
+        value: `${body.studiedCards}/${body.allCards} cartas`,
       });
     }
 
