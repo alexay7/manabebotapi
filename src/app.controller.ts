@@ -61,8 +61,7 @@ export class AppController {
     )
       return;
 
-    // Send embed
-    await channel.send({
+    const message = {
       embeds: [
         {
           title: 'Anki',
@@ -86,6 +85,16 @@ export class AppController {
           color: 0x57ade8,
         },
       ],
-    });
+    };
+
+    if (body.allCards && body.studiedCards) {
+      message.embeds[0].fields.push({
+        name: 'Progreso del mazo',
+        value: `${body.studiedCards}/${body.allCards}`,
+      });
+    }
+
+    // Send embed
+    await channel.send(message);
   }
 }

@@ -68,4 +68,12 @@ export class AnkiFinishedDto {
 
   @IsNumber()
   newCards: number;
+
+  @IsOptional()
+  @IsNumber()
+  allCards?: number;
+
+  @IsOptional()
+  @IsNumber()
+  studiedCards?: number;
 }
