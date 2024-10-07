@@ -25,13 +25,13 @@ export class AppService {
       baseAggr.where({ userId: user });
     }
 
-    // timestamp is a number so we need to convert the dates to numbers
     if (startDate) {
-      console.log(new Date(startDate).getTime());
-      baseAggr.where('timestamp').gte(new Date(startDate).getTime() / 1000);
+      baseAggr.where({ createdAt: { $gte: startDate } });
     }
 
-    if (endDate) baseAggr.where('timestamp').lte(new Date(endDate).getTime());
+    if (endDate) {
+      baseAggr.where({ createdAt: { $lte: endDate } });
+    }
 
     if (limit && page) baseAggr.skip((page - 1) * limit).limit(limit);
 

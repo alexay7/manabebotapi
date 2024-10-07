@@ -1,6 +1,11 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExcludeEndpoint,
+  ApiOkResponse,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import {
   AnkiFinishedDto,
   Medio,
@@ -47,6 +52,7 @@ export class AppController {
   }
 
   @Post('anki')
+  @ApiExcludeEndpoint()
   @ApiOkResponse({ description: 'Log created' })
   async ankiFinished(@Body() body: AnkiFinishedDto) {
     if (!this.discordClient) return;

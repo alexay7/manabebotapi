@@ -9,10 +9,10 @@ export class Log {
   _id: Types.ObjectId;
 
   @Prop({
-    type: Number,
+    type: Date,
     required: true,
   })
-  timestamp: string;
+  createdAt: Date;
 
   @Prop({
     type: String,
@@ -51,10 +51,10 @@ export class Log {
   id: number;
 
   @Prop({
-    type: BigInt,
+    type: String,
     required: true,
   })
-  userId: bigint;
+  userId: string;
 
   @Prop({
     type: Number,
