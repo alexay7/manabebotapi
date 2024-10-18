@@ -1,0 +1,17 @@
+# Docker compose file for running the application
+
+services:
+  # NestJS backend
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./backend:/app
+    environment:
+      - MONGO_URI=
+      - PORT=
+      - BOT_TOKEN=
+      - KANKEN_THREAD=
