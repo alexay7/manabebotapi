@@ -19,6 +19,7 @@ import {
   TextChannel,
   ThreadChannel,
 } from 'discord.js';
+import { CalcTicketsDto } from 'src/dto/calctickets.dto';
 
 @Controller()
 @ApiTags('Logs')
@@ -102,5 +103,16 @@ export class AppController {
 
     // Send embed
     await channel.send(message);
+  }
+
+  @Post('calculate-tickets')
+  @ApiExcludeEndpoint()
+  async calculateTickets(
+    @Query('month') month: number,
+    @Body() body: CalcTicketsDto,
+  ) {
+    if (!month) month = new Date().getMonth();
+
+    return this.appService.calculateTickets(month, body.results);
   }
 }
