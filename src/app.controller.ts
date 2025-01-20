@@ -31,6 +31,7 @@ import {
 import { CalcTicketsDto } from 'src/dto/calctickets.dto';
 import { Request } from 'express';
 import { updateCloudflareDNSIP } from 'src/helpers/cloudflare';
+import { checkCacheIP } from 'src/helpers/cache';
 
 @Controller()
 @ApiTags('Logs')
@@ -129,13 +130,21 @@ export class AppController {
 
   @Post('audiobooksip')
   @ApiExcludeEndpoint()
-  async hitogiip(@Req() req: Request, @Body() body: { key: string }) {
-    if (body.key !== process.env.AUDIOBOOKS_IP_KEY) {
+  async hitogiip(
+    @Req() req: Request,
+    @Body() body: { key: string; ip: string },
+  ) {
+    const { ip, key } = body;
+
+    if (key !== process.env.AUDIOBOOKS_IP_KEY) {
       throw new UnauthorizedException('Falta contraseña');
     }
 
-    // Get the ip of the request
-    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    const needsUpdate = await checkCacheIP(ip);
+
+    if (!needsUpdate) return { msg: 'success' };
+
+    console.log('Updating Cloudflare IP to', ip);
 
     // If the ip is local ignore it
     if (!ip || ip === '::1' || ip.includes('192.168') || typeof ip !== 'string')
