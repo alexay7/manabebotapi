@@ -21,8 +21,8 @@ export enum Medio {
 }
 
 export enum Sort {
-  TIMESTAMP_ASC = 'timestamp_asc',
-  TIMESTAMP_DESC = 'timestamp_desc',
+  DATE_ASC = 'createdAt_asc',
+  DATE_DESC = 'createdAt_desc',
   PUNTOS_ASC = 'puntos_asc',
   PUNTOS_DESC = 'puntos_desc',
 }

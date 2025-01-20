@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Req,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import {
   ApiExcludeEndpoint,
@@ -20,6 +29,8 @@ import {
   ThreadChannel,
 } from 'discord.js';
 import { CalcTicketsDto } from 'src/dto/calctickets.dto';
+import { Request } from 'express';
+import { updateCloudflareDNSIP } from 'src/helpers/cloudflare';
 
 @Controller()
 @ApiTags('Logs')
@@ -114,5 +125,22 @@ export class AppController {
     if (!month) month = new Date().getMonth();
 
     return this.appService.calculateTickets(month, body.results);
+  }
+
+  @Post('audiobooksip')
+  @ApiExcludeEndpoint()
+  async hitogiip(@Req() req: Request, @Body() body: { key: string }) {
+    if (body.key !== process.env.AUDIOBOOKS_IP_KEY) {
+      throw new UnauthorizedException('Falta contraseña');
+    }
+
+    // Get the ip of the request
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
+    // If the ip is local ignore it
+    if (!ip || ip === '::1' || ip.includes('192.168') || typeof ip !== 'string')
+      throw new BadRequestException('No se admiten ips locales');
+
+    return updateCloudflareDNSIP({ subdomain: 'audiobooks.manabe.es', ip });
   }
 }
