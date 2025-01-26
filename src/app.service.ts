@@ -130,8 +130,8 @@ export class AppService {
           return true;
         }
 
-        // Return if the user has less than 30 points
-        if (mediaInfo.points < 30) {
+        // Return if the user has less than 45 points
+        if (mediaInfo.points < 45) {
           console.log('El usuario', voter, 'tiene multa por', media);
           return true;
         }
@@ -158,6 +158,8 @@ export class AppService {
 
     // Final array without duplicates
     const finalList = Array.from(new Set([...ticketUsers, ...mergedUsers]));
+
+    console.log(finalList.filter((user) => !bothArrays.includes(user.userId)));
 
     // Remove users that are in both arrays
     return finalList.filter((user) => !bothArrays.includes(user.userId));
