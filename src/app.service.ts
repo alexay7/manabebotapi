@@ -105,6 +105,8 @@ export class AppService {
         return { userId: log._id, status: 'bonus' } as const;
       });
 
+    const penalties: { userId: string; media: string }[] = [];
+
     // Add to penalty users the users that are in the voter list in any media and have less than 30 points
     const penaltyUsers = Object.entries(voters).map(([media, allVoters]) => {
       // Search every user that has voted in this media in the logs
@@ -115,6 +117,10 @@ export class AppService {
         // If the user is not found, return true
         if (!user) {
           console.log('El usuario', voter, 'tiene multa por', media);
+          penalties.push({
+            userId: voter,
+            media: media,
+          });
           return true;
         }
 
@@ -127,12 +133,20 @@ export class AppService {
         // If no info is found, return true
         if (!mediaInfo) {
           console.log('El usuario', voter, 'tiene multa por', media);
+          penalties.push({
+            userId: voter,
+            media: media,
+          });
           return true;
         }
 
         // Return if the user has less than 45 points
         if (mediaInfo.points < 45) {
           console.log('El usuario', voter, 'tiene multa por', media);
+          penalties.push({
+            userId: voter,
+            media: media,
+          });
           return true;
         }
       });
@@ -143,7 +157,11 @@ export class AppService {
     // Flatten the array without duplicates and convert it to the final object
     const mergedUsers = Array.from(new Set(penaltyUsers.flat())).map(
       (userId) => {
-        return { userId, status: 'penalty' } as const;
+        const failedMedias = penalties
+          .filter((penalty) => penalty.userId === userId)
+          .map((x) => x.media);
+
+        return { userId, status: 'penalty', medias: failedMedias } as const;
       },
     );
 
