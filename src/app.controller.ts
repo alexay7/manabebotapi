@@ -125,6 +125,8 @@ export class AppController {
   ) {
     if (!month) month = new Date().getMonth();
 
+    console.log(month);
+
     return this.appService.calculateTickets(month, body.results);
   }
 
