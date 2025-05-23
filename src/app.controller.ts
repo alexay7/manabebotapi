@@ -125,8 +125,6 @@ export class AppController {
   ) {
     if (!month) month = new Date().getMonth();
 
-    console.log(month);
-
     return this.appService.calculateTickets(month, body.results);
   }
 
@@ -152,6 +150,8 @@ export class AppController {
     if (!ip || ip === '::1' || ip.includes('192.168') || typeof ip !== 'string')
       throw new BadRequestException('No se admiten ips locales');
 
-    return updateCloudflareDNSIP({ subdomain: 'audiobooks.manabe.es', ip });
+    await updateCloudflareDNSIP({ subdomain: 'audiobooks.manabe.es', ip });
+    await updateCloudflareDNSIP({ subdomain: 'tracker.manabe.es', ip });
+    return { msg: 'success' };
   }
 }
